@@ -1,0 +1,12 @@
+{"properties": [
+  {
+    "name": "token.signig.key",
+    "type": "java.lang.String",
+    "description": "A description for 'token.signig.key'"
+  },
+  {
+    "name": "token.signig.key",
+    "type": "java.lang.String",
+    "description": "A description for 'token.signig.key'"
+  }
+]}
