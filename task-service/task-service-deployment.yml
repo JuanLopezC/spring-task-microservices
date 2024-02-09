@@ -2,25 +2,25 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: spring-login
+  name: task-service
 spec:
   selector:
     matchLabels:
-      app: spring-login
+      app: task-service
   template:
     metadata:
       labels:
-        app: spring-login
+        app: task-service
     spec:
       containers:
-      - name: spring-login
-        image: 705931391253.dkr.ecr.us-east-2.amazonaws.com/spring-login:latest
+      - name: task-service
+        image: 705931391253.dkr.ecr.us-east-2.amazonaws.com/spring-tasks-service:latest
         resources:
           limits:
             memory: "256Mi"
             cpu: "100m"
         ports:
-        - containerPort: 30201
+        - containerPort: 30202
       imagePullSecrets: 
       - name: spring-login-secret
 
@@ -28,12 +28,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: spring-login
+  name: task-service
 spec:
-  type: LoadBalancer
   selector:
-    app: spring-login
+    app: task-service
   ports:
-  - port: 30201
-    targetPort: 30201
+  - port: 30202
+    targetPort: 30202
+  type: LoadBalancer
 
