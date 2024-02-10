@@ -39,18 +39,17 @@ public class AuthServiceImpl implements AuthService {
 
   @Override
   public AuthResponse signin(SignInRequest request) {
-    try {
-    var user = userRepository.findByEmail(request.getEmail()).get();
+    var user = userRepository.findByEmail(request.getEmail())
+            .orElseThrow(() -> new BadCredentialsException("Username or password incorrect"));
+    if (!validatePassword(user, request)) {
+      throw  new BadCredentialsException("Username or password incorrect.");
+    }
     var jwt = jwtService.generateToken(user);
     return AuthResponse.builder().token(jwt).build();
-    } catch (BadCredentialsException ex) {
-      //This is for send custom exception message provided by the GlobalExceptionController
-      throw new BadCredentialsException("Username or password incorrect.");
-    } catch (Exception ex) {
-      //Better change to log
-      System.out.println(ex.getMessage());
-      throw new BadCredentialsException("An error occurred while trying to authenticate");
-    }
+  }
+
+  public boolean validatePassword(User user, SignInRequest request) {
+      return passwordEncoder.matches(request.getPassword(), user.getPassword());
   }
 
 }

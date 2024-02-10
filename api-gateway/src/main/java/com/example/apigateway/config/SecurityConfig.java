@@ -7,12 +7,12 @@ import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 
 @Configuration
-@EnableWebSecurity
+//@EnableWebSecurity
 public class SecurityConfig {
   
   @Bean
-  public SecurityWebFilterChain securityFilterChain(ServerHttpSecurity http) throws Exception {
-    return http.csrf(csrf -> csrf.disable()).build();
+  public SecurityWebFilterChain securityFilterChain(ServerHttpSecurity http) {
+    return http.csrf(ServerHttpSecurity.CsrfSpec::disable).build();
   }
 
 }

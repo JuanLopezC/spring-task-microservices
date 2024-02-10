@@ -16,7 +16,7 @@ import io.jsonwebtoken.lang.Arrays;
 public class GlobalExceptionController extends ResponseEntityExceptionHandler{
   
   @ExceptionHandler(value = {BadCredentialsException.class})
-  protected ResponseEntity<Object> handleIllegalArgumentException(BadCredentialsException exception, WebRequest request){
+  protected ResponseEntity<Object> handleBadCredentialsException(BadCredentialsException exception, WebRequest request){
 
     ErrorResponse error = ErrorResponse.builder()
       .timestamp(LocalDateTime.now())
