@@ -9,6 +9,7 @@ import com.jucalc.spring_login.dto.AuthResponse;
 import com.jucalc.spring_login.dto.SignInRequest;
 import com.jucalc.spring_login.dto.SignUpRequest;
 import com.jucalc.spring_login.entities.User;
+import com.jucalc.spring_login.exception.UserAlreadyExistException;
 import com.jucalc.spring_login.repository.UserRepository;
 import com.jucalc.spring_login.services.AuthService;
 import com.jucalc.spring_login.services.JwtService;
@@ -25,9 +26,12 @@ public class AuthServiceImpl implements AuthService {
   private JwtService jwtService;
 
   @Override
-  public AuthResponse signup(SignUpRequest request) {
+  public AuthResponse signup(SignUpRequest request) throws RuntimeException {
+    if (userRepository.findByEmail(request.getEmail()).isPresent()) {
+      throw new UserAlreadyExistException("The email: " + request.getEmail() + " is already registred");
+    }
     var user = User.builder()
-        .firstName(request.getFirstName())
+        .firstName(request.getFirstName().toUpperCase())
         .lastName(request.getLastName())
         .email(request.getEmail())
         .password(passwordEncoder.encode(request.getPassword()))
