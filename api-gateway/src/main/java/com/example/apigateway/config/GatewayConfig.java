@@ -19,10 +19,10 @@ public class GatewayConfig {
     return builder.routes()
       .route("login-service", r -> r.path("/api/v1/auth/**")
             .filters(f -> f.filter(filter))
-            .uri("http://localhost:30201"))
+            .uri("http://localhost:8081"))
       .route("task-service", r -> r.path("/api/v1/tasks/**")
             .filters(f -> f.filter(filter))
-            .uri("http://localhost:30202"))
+            .uri("http://localhost:8082"))
       .build();
   }
 }
