@@ -20,9 +20,11 @@ public class SecurityConfig {
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     return 
       http
-      .addFilterAfter(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-      .authorizeHttpRequests(auth -> auth 
+      .csrf(csrf -> csrf.disable())
+      .authorizeHttpRequests(auth -> auth
+        .requestMatchers("/api-docs/**", "/swagger-ui/**").permitAll() 
         .anyRequest().authenticated())
+      .addFilterAfter(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
       .exceptionHandling(exception -> exception.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
       .build();
   }
