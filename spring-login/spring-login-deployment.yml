@@ -1,0 +1,39 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spring-login
+spec:
+  selector:
+    matchLabels:
+      app: spring-login
+  template:
+    metadata:
+      labels:
+        app: spring-login
+    spec:
+      containers:
+      - name: spring-login
+        image: 705931391253.dkr.ecr.us-east-2.amazonaws.com/spring-login:latest
+        resources:
+          limits:
+            memory: "256Mi"
+            cpu: "100m"
+        ports:
+        - containerPort: 30201
+      imagePullSecrets: 
+      - name: spring-login-secret
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: spring-login
+spec:
+  type: LoadBalancer
+  selector:
+    app: spring-login
+  ports:
+  - port: 30201
+    targetPort: 30201
+

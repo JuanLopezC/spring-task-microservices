@@ -9,6 +9,7 @@ import com.jucalc.spring_login.dto.AuthResponse;
 import com.jucalc.spring_login.dto.SignInRequest;
 import com.jucalc.spring_login.dto.SignUpRequest;
 import com.jucalc.spring_login.entities.User;
+import com.jucalc.spring_login.exception.UserAlreadyExistException;
 import com.jucalc.spring_login.repository.UserRepository;
 import com.jucalc.spring_login.services.AuthService;
 import com.jucalc.spring_login.services.JwtService;
@@ -25,9 +26,12 @@ public class AuthServiceImpl implements AuthService {
   private JwtService jwtService;
 
   @Override
-  public AuthResponse signup(SignUpRequest request) {
+  public AuthResponse signup(SignUpRequest request) throws RuntimeException {
+    if (userRepository.findByEmail(request.getEmail()).isPresent()) {
+      throw new UserAlreadyExistException("The email: " + request.getEmail() + " is already registred");
+    }
     var user = User.builder()
-        .firstName(request.getFirstName())
+        .firstName(request.getFirstName().toUpperCase())
         .lastName(request.getLastName())
         .email(request.getEmail())
         .password(passwordEncoder.encode(request.getPassword()))
@@ -39,18 +43,17 @@ public class AuthServiceImpl implements AuthService {
 
   @Override
   public AuthResponse signin(SignInRequest request) {
-    try {
-    var user = userRepository.findByEmail(request.getEmail()).get();
+    var user = userRepository.findByEmail(request.getEmail())
+            .orElseThrow(() -> new BadCredentialsException("Username or password incorrect"));
+    if (!validatePassword(user, request)) {
+      throw  new BadCredentialsException("Username or password incorrect.");
+    }
     var jwt = jwtService.generateToken(user);
     return AuthResponse.builder().token(jwt).build();
-    } catch (BadCredentialsException ex) {
-      //This is for send custom exception message provided by the GlobalExceptionController
-      throw new BadCredentialsException("Username or password incorrect.");
-    } catch (Exception ex) {
-      //Better change to log
-      System.out.println(ex.getMessage());
-      throw new BadCredentialsException("An error occurred while trying to authenticate");
-    }
+  }
+
+  public boolean validatePassword(User user, SignInRequest request) {
+      return passwordEncoder.matches(request.getPassword(), user.getPassword());
   }
 
 }

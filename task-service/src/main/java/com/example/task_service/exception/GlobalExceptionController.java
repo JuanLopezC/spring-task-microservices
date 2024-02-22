@@ -1,4 +1,4 @@
-package com.jucalc.spring_login.exception;
+package com.example.task_service.exception;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -31,18 +31,6 @@ public class GlobalExceptionController extends ResponseEntityExceptionHandler{
       .build();
 
     return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);  
-  }
-
-  @ExceptionHandler(value = {UserAlreadyExistException.class})
-  protected ResponseEntity<Object> handleUserAlreadyExustException(UserAlreadyExistException exception, WebRequest request) {
-
-    ErrorResponse error = ErrorResponse.builder()
-      .timestamp(LocalDateTime.now())
-      .message(exception.getMessage())
-      .errors(Arrays.asList(null))
-      .build();
-    
-      return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
   }
 
   @Override
