@@ -19,7 +19,7 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: build
-      run: mvn --batch-mode -DskipTest package
+      run: mvn --batch-mode -DskipTests package
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
