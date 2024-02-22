@@ -36,6 +36,6 @@ jobs:
         ECR_REPOSITORY: spring-login
         IMAGE_TAG: spring-login:$(date +%s)
       run: | 
-        docker build . -f spring-login/Dockerfile -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        cd /workspaces/spring-task-microservices/spring-login/ && docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         
