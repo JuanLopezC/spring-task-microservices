@@ -35,7 +35,11 @@ jobs:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: spring-login
         IMAGE_TAG: $(date +%s)
-      run: cd spring-login/ && docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+      run: |
+        cd spring-login/
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
     - name: Push image to Amazon ECR
+      if: success()
       run: docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
         
